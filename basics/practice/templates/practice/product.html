@@ -1,0 +1,25 @@
+{% extends 'practice/main.html' %}
+{% load static %}
+{% block content %}
+<h1 class="mt-5">Products</h1>
+<hr>
+<table class="table mt-5">
+    <thead>
+    <tr>
+        <th scope="col" class="table-primary">Product</th>
+        <th scope="col" class="table-primary">Category</th>
+        <th scope="col" class="table-primary">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for p in products %}
+    <tr>
+        <td>{{p.name}}</td>
+        <td>{{p.category}}</td>
+        <td>{{p.price}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+{% endblock %}

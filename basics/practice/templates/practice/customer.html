@@ -1,0 +1,61 @@
+{% extends 'practice/main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row ">
+    <div class="col-lg-4 col-md-4">
+        <div class="container">
+            <h3>Customer:</h3>
+            <hr>
+            <div class="d-grid gap-2">
+                <button class="btn btn-outline-primary" type="button">Create customer</button>
+                <button class="btn btn-outline-danger" type="button">Delete Customer</button>
+              </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="container">
+            <h3>Customer Info:</h3>
+            <hr>
+            <span><h4>Name:</h4>{{customer.name}}</span><span></span>
+            <span><h4>Email:</h4>{{customer.email}}</span>
+        </div>
+
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="container">
+            <h3>Total Ordres</h3>
+            <hr>
+            {{t_order}}
+        </div>
+
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" class="table-info">Product</th>
+                <th scope="col" class="table-info">Category</th>
+                <th scope="col" class="table-info">Update</th>
+                <th scope="col" class="table-info">Delete</th>
+                <th scope="col" class="table-info">Date</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for o in orders %}
+            <tr>
+                <td>{{o.product}}</td>
+                <td>{{o.product.category}}</td>
+                <td>{{o.date_created}}</td>
+                <td><button type="button" class="btn btn-primary">Update</button></td>
+                <td><button type="button" class="btn btn-danger">Remove</button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        
+        </table>
+    </div>
+</div>
+
+{% endblock %}

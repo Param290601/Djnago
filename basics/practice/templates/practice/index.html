@@ -1,0 +1,116 @@
+{% extends 'practice/main.html' %}
+{% load static %}
+{% block content %}
+<div class="container text-center mt-3">
+    <div class="row">
+        <div class="col-lg-4 col-md-4">
+        <table class="table" >
+            <thead>
+            <tr>
+                <th scope="col" class="table-primary">NO. of Ordres</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{total_order}}</td>
+            </tr>
+            </tbody>
+        
+        </table>
+        </div>
+        <div class="col-lg-4 col-md-4">
+        <table class="table col-lg-4" class="col-lg-4 col- md-4">
+            <thead>
+            <tr>
+                <th scope="col" class="table-primary">Delevired</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{delivered}}</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+        <div class="col-lg-4 col-md-4">
+        <table class="table col-lg-4" class="col-lg-4 col- md-4">
+            <thead>
+            <tr>
+                <th scope="col" class="table-primary">Pendding</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{pendding}}</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+    <div>
+        <h3>Customers</h3>
+    </div>
+            <hr>
+            <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary mb-2">Create Customer</button>
+            </div>
+            <table class="table" >
+                <thead>
+                <tr>
+                    <th></th>
+                    <th scope="col" class="table-success">Customer</th>
+                    <th scope="col" class="table-success">Phone</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for cust in customer  %}
+                <tr>
+                    <td><a class="btn btn-primary" href="{% url 'customer' cust.id %}">view</a></td>
+                    <td>{{cust.name}}</td>
+                    <td>{{cust.phone}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6 col-md-6">
+        <div>
+            <h3>Last 5 Orders</h3>
+        </div>
+            <hr>
+            <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary mb-2">Create Order</button>
+            </div>
+            <table class="table" >
+                <thead>
+                <tr>
+                    
+                    <th scope="col" class="table-success">Product</th>
+                    <th scope="col" class="table-success">Status</th>
+                    <th scope="col" class="table-success">Date</th>
+                    <th scope="col" class="table-success">Update</th>
+                    <th scope="col" class="table-success">Remove</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for o in orders %}
+                <tr>
+                    
+                    <td>{{o.product}}</td>
+                    <td>{{o.status}}</td>
+                    <td>{{o.date_created}}</td>
+                    <td><button type="button" class="btn btn-primary">Update</button></td>
+                    <td><button type="button" class="btn btn-danger">Remove</button></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

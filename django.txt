@@ -1,0 +1,25 @@
+Quries:
+
+https://docs.djangoproject.com/en/4.1/topics/db/queries/
+
+Quries API reference:
+
+https://docs.djangoproject.com/en/4.1/ref/models/querysets/
+
+Default tags:
+
+https://docs.djangoproject.com/en/4.1/ref/templates/builtins/
+
+Default function:
+
+https://www.geeksforgeeks.org/default-django-built-in-field-validation/
+
+How to create custom tags:
+
+https://docs.djangoproject.com/en/4.1/howto/custom-template-tags/
+
+decorators:
+https://docs.djangoproject.com/en/4.1/topics/http/decorators/
+
+Custom decorators:
+https://www.geeksforgeeks.org/creating-custom-decorator-in-django-for-different-permissions/
