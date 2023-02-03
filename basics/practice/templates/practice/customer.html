@@ -30,6 +30,7 @@
         </div>
 
     </div>
+    
     <div>
         <table class="table">
             <thead>
@@ -48,8 +49,8 @@
                 <td>{{o.product}}</td>
                 <td>{{o.product.category}}</td>
                 <td>{{o.date_created}}</td>
-                <td><button type="button" class="btn btn-primary">Update</button></td>
-                <td><button type="button" class="btn btn-danger">Remove</button></td>
+                <td><a href="{% url 'updateOrder' o.id %}" class="btn btn-primary">Update</a></td>
+                <td><a href="{% url 'deleteOrder' o.id %}"  class="btn btn-danger">Remove</a></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -58,4 +59,12 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col">
+        <form method="GET">
+        {{myFilter.form}}
+        <button type="submit" name="submit" class="btn btn-primary">search</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

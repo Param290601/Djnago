@@ -3,6 +3,10 @@
 {% block content %}
 <h1 class="mt-5">Products</h1>
 <hr>
+<form method="GET">
+    <input type="text" class="form-control" name="search" placeholder="search" value="{{s}}">
+    <button type="search"  value="search" class="btn btn-primary">search</button>
+</form>
 <table class="table mt-5">
     <thead>
     <tr>
@@ -12,6 +16,7 @@
     </tr>
     </thead>
     <tbody>
+    {% comment %} {{products}} {% endcomment %}
     {% for p in products %}
     <tr>
         <td>{{p.name}}</td>

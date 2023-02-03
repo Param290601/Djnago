@@ -82,7 +82,7 @@
         </div>
             <hr>
             <div class="d-grid gap-2">
-            <button type="button" class="btn btn-primary mb-2">Create Order</button>
+            <a type="button" class="btn btn-primary mb-2" href="{% url 'createOreder' %}">Create Order</a>
             </div>
             <table class="table" >
                 <thead>
@@ -96,14 +96,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for o in orders %}
+                {% for o in orders|slice:":5" %}
                 <tr>
-                    
                     <td>{{o.product}}</td>
                     <td>{{o.status}}</td>
                     <td>{{o.date_created}}</td>
-                    <td><button type="button" class="btn btn-primary">Update</button></td>
-                    <td><button type="button" class="btn btn-danger">Remove</button></td>
+                    <td><a href="{% url 'updateOrder' o.id %}" class="btn btn-primary">Update</a></td>
+                    <td><a href="{% url 'deleteOrder' o.id %}"  class="btn btn-danger">Remove</a></td>
+                  
                 </tr>
                 {% endfor %}
                 </tbody>

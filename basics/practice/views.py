@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpRequest
 from .models import *
 from django.template import loader
 from django.http import HttpResponse
+from .forms import OrderForm
+from .filters import OrderFilter
+from django.db.models import Q
 
 def home(request):
     # name = Customer.objects.filter(name__startswith='P').values()
@@ -39,18 +42,62 @@ def home(request):
 
 def prodcut(request):
     products = Product.objects.all()
+    if request.method == 'GET':
+        s = request.GET.get('search')
+        if s!=None:
+            products = products.filter(Q(name=s)|Q(category =s))
 
-    return render(request,'practice/product.html',{"products":products})
+    return render(request,'practice/product.html',{"products":products, "s":s})
 
 def customer(request,pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all()
+    
+    myFilter = OrderFilter(request.GET, queryset=orders)
+    
+    orders = myFilter.qs
     t_order = orders.count()
     context = {
         'customer' : customer,
         'orders' : orders,
         't_order' : t_order,
+        'myFilter' : myFilter,
     }
     return render(request,'practice/customer.html',context)
 
+def createOrder(request):
+    form = OrderForm()
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid:
+            # print("***********")
+            form.save()
+            return redirect('/') 
+        
+    context = {'form' : form}
+    return render(request,'practice/create_order.html',context)
+
+def updateOrder(request,pk):
+    orders= Order.objects.get(id=pk)
+    form = OrderForm(instance=orders)
+    if request.method == 'POST':
+        form = OrderForm(request.POST,instance=orders)
+        if form.is_valid:
+            form.save()
+            return redirect('/')
+    context = {
+        'form' : form
+    }
+    return render(request,'practice/create_order.html',context)
+
+def deleteOrder(request,pk):
+    orders= Order.objects.get(id=pk)
+    # form = OrderForm(instance=orders)
+    if request.method =='POST':
+        orders.delete()
+        return redirect('/')
+    context = {
+        'item' : orders
+    }
+    return render(request,'practice/delete_order.html',context)
 # Create your views here.

@@ -1,0 +1,11 @@
+{% extends 'practice/main.html' %}
+{% load static %}
+{% block content %}
+
+<p>Are you sure you want to delete the {{item}}</p>
+<form action="" method="POST">
+     {% csrf_token %}
+<a class="btn btn-warning" href="{% url 'home'%}">Cancel</a>
+<button type="submit" name="submit" class="btn btn-danger">Delete</button>
+</form>
+{% endblock %}

@@ -23,3 +23,7 @@ https://docs.djangoproject.com/en/4.1/topics/http/decorators/
 
 Custom decorators:
 https://www.geeksforgeeks.org/creating-custom-decorator-in-django-for-different-permissions/
+
+
+forms:
+https://www.geeksforgeeks.org/django-forms/
