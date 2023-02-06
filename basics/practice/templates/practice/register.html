@@ -1,0 +1,48 @@
+{% extends 'practice/main.html' %}
+{% load static %}
+{% block content %}
+{% comment %} <form action="" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" name="submit" id="">
+</form> {% endcomment %}
+
+<center><h1>Register</h1></center>
+
+<div class="container">
+    <div class="p-4 m-4">
+        <div class="col-lg-5 col-md-5 col-xs-5 mx-auto border rounded py-5 px-5 shadow p-3 mb-5 bg-body rounded">
+            <form action="{% url 'register' %}" method="POST">
+                {% csrf_token %}
+                <!-- First name -->
+                <div class="mb-3">
+                    <label for="" class="form-label">Name:</label>
+                    {{form.username}}
+                </div> 
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="" class="form-label">Email</label>
+                    {{form.email}}
+                </div>
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="" class="form-label">Password</label>
+                    {{form.password1}}
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">ConfirmPassword</label>
+                    {{form.password2}}
+                </div>
+                <div>
+                    {{form.errors}}
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-sm btn-info rounded-pill" type="Submit" value="Sign UP">
+                </div>
+                <p>Already User?<a href="{% url 'login' %}"> Login</a> </p> 
+            </form>
+        </div>
+    </div>
+</div> 
+
+  {% endblock %}    

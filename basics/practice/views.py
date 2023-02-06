@@ -3,10 +3,15 @@ from django.http import HttpRequest
 from .models import *
 from django.template import loader
 from django.http import HttpResponse
-from .forms import OrderForm
+from .forms import OrderForm,CreateUserForm
 from .filters import OrderFilter
 from django.db.models import Q
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 
+@login_required(login_url='login')
 def home(request):
     # name = Customer.objects.filter(name__startswith='P').values()
     # order = Customer.objects.all().order_by('-name').values()
@@ -40,6 +45,7 @@ def home(request):
     # return render(request,'practice/index.html')
     # return HttpRequest("Home")
 
+@login_required(login_url='login')
 def prodcut(request):
     products = Product.objects.all()
     if request.method == 'GET':
@@ -49,6 +55,7 @@ def prodcut(request):
 
     return render(request,'practice/product.html',{"products":products, "s":s})
 
+@login_required(login_url='login')
 def customer(request,pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all()
@@ -65,6 +72,7 @@ def customer(request,pk):
     }
     return render(request,'practice/customer.html',context)
 
+@login_required(login_url='login')
 def createOrder(request):
     form = OrderForm()
     if request.method == 'POST':
@@ -77,6 +85,7 @@ def createOrder(request):
     context = {'form' : form}
     return render(request,'practice/create_order.html',context)
 
+@login_required(login_url='login')
 def updateOrder(request,pk):
     orders= Order.objects.get(id=pk)
     form = OrderForm(instance=orders)
@@ -90,6 +99,7 @@ def updateOrder(request,pk):
     }
     return render(request,'practice/create_order.html',context)
 
+@login_required(login_url='login')
 def deleteOrder(request,pk):
     orders= Order.objects.get(id=pk)
     # form = OrderForm(instance=orders)
@@ -101,3 +111,33 @@ def deleteOrder(request,pk):
     }
     return render(request,'practice/delete_order.html',context)
 # Create your views here.
+
+def register(request):
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request,"account is created for: " +user)
+            return redirect('login')
+    context = {
+        'form' : form,
+    }
+    return render(request,'practice/register.html',context)
+
+def loginpage(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username,password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('home')
+        else:
+            messages.info(request,'username or password is incorrect')
+    return render(request,'practice/login.html')
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
