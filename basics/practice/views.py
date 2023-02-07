@@ -10,9 +10,14 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .decorators import unauthenticated_user,allowed_user,admin_only
+from django.contrib.auth.models import Group
 
 @login_required(login_url='login')
+@admin_only
 def home(request):
+    # superusers = User.objects.filter(is_superuser=True) 
     # name = Customer.objects.filter(name__startswith='P').values()
     # order = Customer.objects.all().order_by('-name').values()
     # mydata = Customer.objects.filter(name__icontains='dik').values()
@@ -46,7 +51,11 @@ def home(request):
     # return HttpRequest("Home")
 
 @login_required(login_url='login')
+@allowed_user(allowed_rolse=['admin'])
 def prodcut(request):
+    
+    superusers = User.objects.filter(is_superuser=True) 
+    print(superusers)
     products = Product.objects.all()
     if request.method == 'GET':
         s = request.GET.get('search')
@@ -56,6 +65,7 @@ def prodcut(request):
     return render(request,'practice/product.html',{"products":products, "s":s})
 
 @login_required(login_url='login')
+@allowed_user(allowed_rolse=['admin'])
 def customer(request,pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all()
@@ -73,6 +83,7 @@ def customer(request,pk):
     return render(request,'practice/customer.html',context)
 
 @login_required(login_url='login')
+@allowed_user(allowed_rolse=['admin'])
 def createOrder(request):
     form = OrderForm()
     if request.method == 'POST':
@@ -86,6 +97,7 @@ def createOrder(request):
     return render(request,'practice/create_order.html',context)
 
 @login_required(login_url='login')
+@allowed_user(allowed_rolse=['admin'])
 def updateOrder(request,pk):
     orders= Order.objects.get(id=pk)
     form = OrderForm(instance=orders)
@@ -100,6 +112,7 @@ def updateOrder(request,pk):
     return render(request,'practice/create_order.html',context)
 
 @login_required(login_url='login')
+@allowed_user(allowed_rolse=['admin'])
 def deleteOrder(request,pk):
     orders= Order.objects.get(id=pk)
     # form = OrderForm(instance=orders)
@@ -111,22 +124,31 @@ def deleteOrder(request,pk):
     }
     return render(request,'practice/delete_order.html',context)
 # Create your views here.
-
+@unauthenticated_user
 def register(request):
     form = CreateUserForm()
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
+        password = request.POST.get('password1')
+        if len(password) < 8:
+                messages.info(request,"lenght must be greater than 8")
+                return redirect('register')
         if form.is_valid():
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request,"account is created for: " +user)
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            group = Group.objects.get(name = 'customer')
+            user.groups.add(group)
+            messages.success(request,"account is created for: " +username)
             return redirect('login')
     context = {
         'form' : form,
     }
     return render(request,'practice/register.html',context)
-
+@unauthenticated_user
 def loginpage(request):
+    # if request.user.is_authencticated:
+    #     return redirect('home')
+    # else:
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -141,3 +163,6 @@ def loginpage(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+def userpage(request):
+    return render(request,'practice/user.html')

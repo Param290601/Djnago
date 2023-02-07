@@ -33,9 +33,26 @@
                     <label for="" class="form-label">ConfirmPassword</label>
                     {{form.password2}}
                 </div>
-                <div>
-                    {{form.errors}}
+                
+               
+                {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>{{form.username.errors}}</strong>
+                
+                    {{form.email.errors}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                
+                    {% for message in messages %}
+                    {{message}}
+                    {%endfor%}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
+                {% endif %}
+                
+                    
+                
+            
                 <div class="form-group">
                     <input class="btn btn-sm btn-info rounded-pill" type="Submit" value="Sign UP">
                 </div>
