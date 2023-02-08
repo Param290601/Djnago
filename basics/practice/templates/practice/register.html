@@ -37,12 +37,16 @@
                
                 {% if form.errors %}
                 <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
                     <strong>{{form.username.errors}}</strong>
-                
-                    {{form.email.errors}}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                
+                </div>
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                   <strong>{{form.email.errors}}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+                </div>
+                {% endif %}
+                {% if messages %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
                     {% for message in messages %}
                     {{message}}
                     {%endfor%}
@@ -50,9 +54,6 @@
                 </div>
                 {% endif %}
                 
-                    
-                
-            
                 <div class="form-group">
                     <input class="btn btn-sm btn-info rounded-pill" type="Submit" value="Sign UP">
                 </div>

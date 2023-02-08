@@ -1,0 +1,27 @@
+{% extends 'practice/main.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-lg-6 mt-3">
+                <div class="card" style="width: 18rem;">
+                    <img src="{{request.user.customer.profile.url}}" style ="width : 200%" class="img-thumbnail" alt="">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <a href="#" class="btn btn-primary">upload</a>
+                    </div>
+                </div>
+                    
+            </div>
+            <div class ="col-md-6 col-lg-6 mt-3" >
+                <form action="" method = "POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                        <input class="btn btn-sm btn-info rounded-pill" type="Submit" name="update">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

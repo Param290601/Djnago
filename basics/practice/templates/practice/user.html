@@ -1,6 +1,76 @@
 {% extends 'practice/main.html' %}
 {% load static %}
 {% block content %}
+    
+<div class="container text-center mt-3">
     {% csrf_token %}
-    <h1>IN user page</h1>
+    <div class="row">
+        <div class="col-lg-4 col-md-4">
+            <table class="table" >
+                <thead>
+                <tr>
+                    <th scope="col" class="table-primary">NO. of Ordres</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{total_order}}</td>
+                </tr>
+                </tbody>
+            
+            </table>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <table class="table col-lg-4" class="col-lg-4 col- md-4">
+                <thead>
+                <tr>
+                    <th scope="col" class="table-primary">Delevired</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{delivered}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <table class="table col-lg-4" class="col-lg-4 col- md-4">
+                <thead>
+                <tr>
+                    <th scope="col" class="table-primary">Pendding</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{pendding}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" class="table-info">Product</th>
+                <th scope="col" class="table-info">Category</th>
+                <th scope="col" class="table-info">Date</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for o in orders %}
+            <tr>
+                <td>{{o.product}}</td>
+                <td>{{o.product.category}}</td>
+                <td>{{o.date_created}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        
+        </table>
+    </div>
+</div>
 {% endblock %}

@@ -17,8 +17,6 @@
         <div class="col-lg-5 col-md-5 col-xs-5 mx-auto border rounded py-5 px-5 shadow p-3 mb-5 bg-body rounded">
             <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
-               
-                
                 <!-- Email -->
                 <div class="mb-3">
                     <label for="" class="form-label">username</label>
@@ -31,7 +29,7 @@
                     <input type="password" name="password" id="" class="form-control rounded-pill" placeholder="******"
                            aria-describedby="helpId">
                 </div>
-                <P><a href="">Forget Password?</a></P>
+                <P><a href="{% url 'forgetpassword' %}">Forget Password?</a></P>
                 <div class="form-group">
                     <input class="btn btn-sm btn-info rounded-pill" type="Submit" value="Login">
                 </div>
