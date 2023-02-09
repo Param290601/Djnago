@@ -15,10 +15,12 @@ from .decorators import unauthenticated_user,allowed_user,admin_only
 from django.contrib.auth.models import Group
 import uuid
 from .helpers import send_forget_password_email
+from django.views import View
+from django.utils.decorators import method_decorator
 
-@login_required(login_url='login')
-@admin_only
-def home(request):
+# @login_required(login_url='login')
+# @admin_only
+# def home(request):
     # superusers = User.objects.filter(is_superuser=True) 
     # name = Customer.objects.filter(name__startswith='P').values()
     # order = Customer.objects.all().order_by('-name').values()
@@ -36,42 +38,42 @@ def home(request):
     # pdb.set_trace()
     # gt = greater than
     # lt = less than
-    customer = Customer.objects.all()
-    orders = Order.objects.all()
-    total_oreder = orders.count()
-    delivered = orders.filter(status = 'Delivered').count()
-    pendding = orders.filter(status = 'Pending').count()
-    context = {
-    'orders':orders,
-    'customer': customer,
-    'total_order': total_oreder,
-    'delivered'  :delivered,
-    'pendding' : pendding
-    }
-    return render(request,'practice/index.html',context)
+    # customer = Customer.objects.all()
+    # orders = Order.objects.all()
+    # total_oreder = orders.count()
+    # delivered = orders.filter(status = 'Delivered').count()
+    # pendding = orders.filter(status = 'Pending').count()
+    # context = {
+    # 'orders':orders,
+    # 'customer': customer,
+    # 'total_order': total_oreder,
+    # 'delivered'  :delivered,
+    # 'pendding' : pendding
+    # }
+    # return render(request,'practice/index.html',context)
     # return render(request,'practice/index.html')
     # return HttpRequest("Home")
-@login_required(login_url='login')
-@allowed_user(allowed_rolse=['customer'])
-def userpage(request):
-    orders = request.user.customer.order_set.all()
-    total_oreder = orders.count()
-    delivered = orders.filter(status = 'Delivered').count()
-    pendding = orders.filter(status = 'Pending').count()
-    context = {
-        'orders' : orders,
-        'total_oreder' : total_oreder,
-        'delivered' : delivered,
-        'pendding' : pendding
-    }
-    return render(request,'practice/user.html',context)
+
+
+# @login_required(login_url='login')
+# @allowed_user(allowed_rolse=['customer'])
+# def userpage(request):
+#     orders = request.user.customer.order_set.all()
+#     total_oreder = orders.count()
+#     delivered = orders.filter(status = 'Delivered').count()
+#     pendding = orders.filter(status = 'Pending').count()
+#     context = {
+#         'orders' : orders,
+#         'total_oreder' : total_oreder,
+#         'delivered' : delivered,
+#         'pendding' : pendding
+#     }
+#     return render(request,'practice/user.html',context)
 
 @login_required(login_url='login')
 @allowed_user(allowed_rolse=['admin'])
 def prodcut(request):
     
-    superusers = User.objects.filter(is_superuser=True) 
-    print(superusers)
     products = Product.objects.all()
     if request.method == 'GET':
         s = request.GET.get('search')
@@ -227,6 +229,9 @@ def forgetpassword(request):
 def changepassword(request,token):
 
     profile_obj = Customer.objects.filter(forget_password_token=token).first()
+    context = {
+        'profile_obj' : profile_obj.user.id
+    }   
 
     if request.method == 'POST':
         new_password = request.POST.get('newpassword')
@@ -235,19 +240,80 @@ def changepassword(request,token):
 
         if user_id is None:
             messages.success(request,'No user id found')
-            return redirect('/changepassword/{token}/') 
+            return render(request,'practice/changepassword.html',context) 
         
+        l, u, p, d = 0, 0, 0, 0
+        if (len(new_password) >= 8):
+            for i in new_password:
+    
+                # counting lowercase alphabets
+                if (i.islower()):
+                    l+=1           
+        
+                # counting uppercase alphabets
+                if (i.isupper()):
+                    u+=1           
+        
+                # counting digits
+                if (i.isdigit()):
+                    d+=1           
+        
+                # counting the mentioned special characters
+                if(i=='@'or i=='$' or i=='_'):
+                    p+=1          
+            if (l<1 or u<1 or p<1 or d<1 or l+p+u+d!=len(new_password)):
+                messages.success(request,"password is not valid")
+                return render(request,'practice/changepassword.html',context)
+        else:
+            messages.success(request,"password is short")
+            return render(request,'practice/changepassword.html',context)
+         
         if new_password != confirm_password:
             messages.success(request,"both password should be same")
-            return redirect('/changepassword/{token}/')
+            return render(request,'practice/changepassword.html',context)
         
         user_obj = User.objects.get(id = user_id)
         user_obj.set_password(new_password)
         user_obj.save()
         return redirect('login')
 
-    context = {
-        'profile_obj' : profile_obj.user.id
-    }    
+    
 
     return render(request,'practice/changepassword.html',context)
+decorators = [admin_only, login_required(login_url='login')]
+@method_decorator(decorators, name='dispatch')
+class home(View):
+    template_name = 'practice/index.html'
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super().dispatch(request, *args, **kwargs)
+    
+    def get(self,request):
+        customer = Customer.objects.all()
+        orders = Order.objects.all()
+        total_oreder = orders.count()
+        delivered = orders.filter(status = 'Delivered').count()
+        pendding = orders.filter(status = 'Pending').count()
+        context = {
+        'orders':orders,
+        'customer': customer,
+        'total_order': total_oreder,
+        'delivered'  :delivered,
+        'pendding' : pendding
+        }
+        return render(request,self.template_name,context)
+@method_decorator(decorators, name='dispatch')
+class userpage(View):
+    template_name = 'practice/product.html'
+    def get(self,request):
+        orders = request.user.customer.order_set.all()
+        total_oreder = orders.count()
+        delivered = orders.filter(status = 'Delivered').count()
+        pendding = orders.filter(status = 'Pending').count()
+        context = {
+            'orders' : orders,
+            'total_oreder' : total_oreder,
+            'delivered' : delivered,
+            'pendding' : pendding
+        }
+        return render(request,self.template_name,context)
