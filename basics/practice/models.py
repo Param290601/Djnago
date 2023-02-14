@@ -28,6 +28,7 @@ class Product(models.Model):
         )
         name = models.CharField(max_length=100, null=True)
         price = models.FloatField(null=True)
+        company = models.CharField(max_length=100,null=True,blank=True)
         category = models.CharField(max_length=100, null=True,choices=CATEGORY)
         description = models.CharField(max_length=200 , null=True)
         date_created = models.DateTimeField(auto_now_add= True , null=True)
