@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from .models import *
 from django.template import loader
 from django.http import HttpResponse
-from .forms import OrderForm, CreateUserForm, CustomerForm
+from .forms import OrderForm, CreateUserForm, CustomerForm, ProductForm
 from .filters import OrderFilter, PoductFilter
 from django.db.models import Q
 from django.contrib import messages
@@ -205,44 +205,32 @@ class userpage(View):
         return render(request, self.template_name, context)
 
 
-# @method_decorator(decorators1, name='dispatch')
-# class product(ListView):
-#     templet_name = 'practice/product.html'
+@method_decorator(decorators1, name='dispatch')
+class product(ListView):
+    templet_name = 'practice/product.html'
 
-#     def get(self, request):
-#         context = {}
-#         products = Product.objects.all()
-#         product_Filter = PoductFilter(self.request.GET, queryset=products)
-#         context['product_Filter'] = product_Filter
-#         paginator_product = Paginator(product_Filter.qs,2,orphans=1) 
-#         page_number = request.GET.get('page')
-#         page_obj = paginator_product.get_page(page_number)
-#         context['page_obj'] = page_obj
-        
-#         return render(request, self.templet_name,context = context)
-
-@login_required(login_url='login')
-@allowed_user(allowed_rolse=['admin'])
-def prodcut(request):
-    context = {}
-    products = Product.objects.all()
-    if request.method == 'GET':
+    def get(self, request):
+        context = {}
+        products = Product.objects.all()
+        if request.method == 'GET':
             s = request.GET.get('search')
             if s!=None:
                 products = products.filter(Q(name__icontains=s) | Q(company__icontains=s))
             else:
                 products = Product.objects.all()
-    product_Filter = PoductFilter(request.GET, queryset=products)
-    ps = product_Filter.qs
-    product = products.intersection(ps)
-    context['product_Filter'] = product_Filter
-    context['s'] = s
-    paginator_product = Paginator(product,2) 
-    page_number = request.GET.get('page')
-    page_obj = paginator_product.get_page(page_number)
-    context['page_obj'] = page_obj
-    
-    return render(request,'practice/product.html',context = context)
+        product_Filter = PoductFilter(request.GET, queryset=products)
+        ps = product_Filter.qs
+        product = products.intersection(ps)
+        context['product_Filter'] = product_Filter
+        context['s'] = s
+        paginator_product = Paginator(product,2) 
+        page_number = request.GET.get('page')
+        page_obj = paginator_product.get_page(page_number)
+        context['page_obj'] = page_obj
+        
+        return render(request,'practice/product.html',context = context)
+
+
 
 @method_decorator(decorators1, name='dispatch')
 class customer(TemplateView):
@@ -409,3 +397,33 @@ class loginpage(View):
 # detail view print the particulart cutomer data which is needed
 # in details view we compulsary have to pass id in url with pk or slug
 # list view will print the data od that particular customer in the page
+@method_decorator(decorators1, name='dispatch')
+class createProduct(CreateView):
+
+    model = Product
+    form_class = ProductForm
+    template_name = 'practice/create_product.html'
+    success_url = '/'
+
+    def form_valid(self, form: ProductForm):
+
+        return super().form_valid(form)
+
+
+@method_decorator(decorators1, name='dispatch')
+class updateProduct(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'practice/create_product.html'
+    success_url = '/product'
+
+    def form_valid(self, form: ProductForm):
+
+        return super().form_valid(form)
+
+
+@method_decorator(decorators1, name='dispatch')
+class deleteProduct(DeleteView):
+    model = Product
+    template_name = 'practice/delete_product.html'
+    success_url = '/product'

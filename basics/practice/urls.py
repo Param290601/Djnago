@@ -20,11 +20,14 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('',views.home.as_view(), name = 'home'),
-    path('product/',views.prodcut, name='product'),
+    path('product/',views.product.as_view(), name='product'),
     path('customer/<str:pk>/',views.customer.as_view(), name='customer'),
     path('create_order/',views.createOrder.as_view(), name='createOreder'),
     path('update_order/<str:pk>/',views.updateOrder.as_view(), name='updateOrder'),
     path('delete_order/<str:pk>/',views.deleteOrder.as_view(), name='deleteOrder'), 
+    path('create_product/',views.createProduct.as_view(), name='createProduct'),
+    path('update_product/<str:pk>/',views.updateProduct.as_view(), name='updateProduct'),
+    path('delete_product/<str:pk>/',views.deleteProduct.as_view(), name='deleteProduct'), 
     path('register/',views.register.as_view(),name='register'),
     path('login/',views.loginpage.as_view(),name='login'),
     path('logout/',views.logoutUser.as_view(),name='logout'),

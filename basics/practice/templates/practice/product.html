@@ -26,6 +26,8 @@
         <th scope="col" class="table-primary">Company</th>
         <th scope="col" class="table-primary">Category</th>
         <th scope="col" class="table-primary">Price</th>
+        <th scope="col" class="table-primary">update</th>
+        <th scope="col" class="table-primary">delete</th>
     </tr>
     </thead>
     <tbody>
@@ -37,6 +39,8 @@
         <td>{{p.company}}</td>
         <td>{{p.category}}</td>
         <td>{{p.price}}</td>
+        <td><a href="{% url 'updateProduct' p.id %}" class="btn btn-primary">Update</a></td>
+        <td><a href="{% url 'deleteProduct' p.id %}"  class="btn btn-danger">Remove</a></td>
     </tr>
     {% endfor %}
     
